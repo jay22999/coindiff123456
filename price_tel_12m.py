@@ -136,11 +136,11 @@ def on_open(binancesocket):
         binancesocket.send(json.dumps(subscribe_message))
         time.sleep(1)
 
+if __name__ == "__main__":
+    binancesocket = WebSocketApp(
+        "wss://stream.binance.com:9443/ws", on_message=on_messege, on_close=on_close, on_error=on_error, on_open=on_open
+    )
 
-binancesocket = WebSocketApp(
-    "wss://stream.binance.com:9443/ws", on_message=on_messege, on_close=on_close, on_error=on_error, on_open=on_open
-)
-
-binancesocket.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE}, dispatcher=rel)
-rel.signal(2, rel.abort)
-rel.dispatch()
+    binancesocket.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE}, dispatcher=rel)
+    rel.signal(2, rel.abort)
+    rel.dispatch()
