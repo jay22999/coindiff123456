@@ -46,20 +46,13 @@ dp = diffper["per"]
 dv = diffper["val"]
 ex = []
 
-proxies = {
-    'http': '134.238.252.143:8080',
-   'https': '134.238.252.143:8080'
-}
-x = requests.get("http://ipinfo.io/json", proxies=proxies)
-print(x.text)
-# exit()
 symbols = requests.get(
-    "https://api.binance.com/api/v3/exchangeInfo", proxies=proxies)
+    "https://api.binance.com/api/v3/exchangeInfo")
 symbols = symbols.json()
 symbols = symbols["symbols"]
 
 future_pair = requests.get(
-    "https://fapi.binance.com/fapi/v1/pmExchangeInfo", proxies=proxies)
+    "https://fapi.binance.com/fapi/v1/pmExchangeInfo")
 future_pair = future_pair.json()
 future_pair = future_pair["notionalLimits"]
 
@@ -136,11 +129,11 @@ def on_open(binancesocket):
         binancesocket.send(json.dumps(subscribe_message))
         time.sleep(1)
 
-if __name__ == "__main__":
-    binancesocket = WebSocketApp(
-        "wss://stream.binance.com:9443/ws", on_message=on_messege, on_close=on_close, on_error=on_error, on_open=on_open
-    )
 
-    binancesocket.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE}, dispatcher=rel)
-    rel.signal(2, rel.abort)
-    rel.dispatch()
+binancesocket = WebSocketApp(
+    "wss://stream.binance.com:9443/ws", on_message=on_messege, on_close=on_close, on_error=on_error, on_open=on_open
+)
+
+binancesocket.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE}, dispatcher=rel)
+rel.signal(2, rel.abort)
+rel.dispatch()
